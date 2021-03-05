@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="AttendanceManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Course">
+          <Key>
+            <PropertyRef Name="CourseId" />
+          </Key>
+          <Property Name="CourseId" Type="int" Nullable="false" />
+          <Property Name="CourseName" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="StudentDetails">
+          <Key>
+            <PropertyRef Name="Rollno" />
+          </Key>
+          <Property Name="Rollno" Type="int" Nullable="false" />
+          <Property Name="StudentName" Type="varchar" MaxLength="50" />
+          <Property Name="CourseId" Type="int" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="50" />
+          <Property Name="Age" Type="int" />
+          <Property Name="Mobile" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="StudnetAttendance">
+          <Key>
+            <PropertyRef Name="Statusno" />
+          </Key>
+          <Property Name="Statusno" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Rollno" Type="int" />
+          <Property Name="StudentName" Type="varchar" MaxLength="50" />
+          <Property Name="DateOfClass" Type="varchar" MaxLength="50" />
+          <Property Name="AttendanceStatus" Type="varchar" MaxLength="50" />
+          <Property Name="Courseid" Type="int" />
+        </EntityType>
+        <Association Name="FK_StudentDetails_Course">
+          <End Role="Course" Type="Self.Course" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="StudentDetails" Type="Self.StudentDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="StudentDetails">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudnetAttendance_StudentDetails">
+          <End Role="StudentDetails" Type="Self.StudentDetails" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="StudnetAttendance" Type="Self.StudnetAttendance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StudentDetails">
+              <PropertyRef Name="Rollno" />
+            </Principal>
+            <Dependent Role="StudnetAttendance">
+              <PropertyRef Name="Rollno" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AttendanceManagementModelStoreContainer">
+          <EntitySet Name="Course" EntityType="Self.Course" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StudentDetails" EntityType="Self.StudentDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StudnetAttendance" EntityType="Self.StudnetAttendance" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_StudentDetails_Course" Association="Self.FK_StudentDetails_Course">
+            <End Role="Course" EntitySet="Course" />
+            <End Role="StudentDetails" EntitySet="StudentDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudnetAttendance_StudentDetails" Association="Self.FK_StudnetAttendance_StudentDetails">
+            <End Role="StudentDetails" EntitySet="StudentDetails" />
+            <End Role="StudnetAttendance" EntitySet="StudnetAttendance" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AttendanceManagementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Course">
+          <Key>
+            <PropertyRef Name="CourseId" />
+          </Key>
+          <Property Name="CourseId" Type="Int32" Nullable="false" />
+          <Property Name="CourseName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="StudentDetails" Relationship="Self.FK_StudentDetails_Course" FromRole="Course" ToRole="StudentDetails" />
+        </EntityType>
+        <EntityType Name="StudentDetail">
+          <Key>
+            <PropertyRef Name="Rollno" />
+          </Key>
+          <Property Name="Rollno" Type="Int32" Nullable="false" />
+          <Property Name="StudentName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CourseId" Type="Int32" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Age" Type="Int32" />
+          <Property Name="Mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Course" Relationship="Self.FK_StudentDetails_Course" FromRole="StudentDetails" ToRole="Course" />
+          <NavigationProperty Name="StudnetAttendances" Relationship="Self.FK_StudnetAttendance_StudentDetails" FromRole="StudentDetails" ToRole="StudnetAttendance" />
+        </EntityType>
+        <EntityType Name="StudnetAttendance">
+          <Key>
+            <PropertyRef Name="Statusno" />
+          </Key>
+          <Property Name="Statusno" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Rollno" Type="Int32" />
+          <Property Name="StudentName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DateOfClass" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AttendanceStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Courseid" Type="Int32" />
+          <NavigationProperty Name="StudentDetail" Relationship="Self.FK_StudnetAttendance_StudentDetails" FromRole="StudnetAttendance" ToRole="StudentDetails" />
+        </EntityType>
+        <Association Name="FK_StudentDetails_Course">
+          <End Role="Course" Type="Self.Course" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="StudentDetails" Type="Self.StudentDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="StudentDetails">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudnetAttendance_StudentDetails">
+          <End Role="StudentDetails" Type="Self.StudentDetail" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="StudnetAttendance" Type="Self.StudnetAttendance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StudentDetails">
+              <PropertyRef Name="Rollno" />
+            </Principal>
+            <Dependent Role="StudnetAttendance">
+              <PropertyRef Name="Rollno" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AttendanceManagementEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Courses" EntityType="Self.Course" />
+          <EntitySet Name="StudentDetails" EntityType="Self.StudentDetail" />
+          <EntitySet Name="StudnetAttendances" EntityType="Self.StudnetAttendance" />
+          <AssociationSet Name="FK_StudentDetails_Course" Association="Self.FK_StudentDetails_Course">
+            <End Role="Course" EntitySet="Courses" />
+            <End Role="StudentDetails" EntitySet="StudentDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudnetAttendance_StudentDetails" Association="Self.FK_StudnetAttendance_StudentDetails">
+            <End Role="StudentDetails" EntitySet="StudentDetails" />
+            <End Role="StudnetAttendance" EntitySet="StudnetAttendances" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AttendanceManagementModelStoreContainer" CdmEntityContainer="AttendanceManagementEntities1">
+          <EntitySetMapping Name="Courses">
+            <EntityTypeMapping TypeName="AttendanceManagementModel.Course">
+              <MappingFragment StoreEntitySet="Course">
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="CourseName" ColumnName="CourseName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StudentDetails">
+            <EntityTypeMapping TypeName="AttendanceManagementModel.StudentDetail">
+              <MappingFragment StoreEntitySet="StudentDetails">
+                <ScalarProperty Name="Rollno" ColumnName="Rollno" />
+                <ScalarProperty Name="StudentName" ColumnName="StudentName" />
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StudnetAttendances">
+            <EntityTypeMapping TypeName="AttendanceManagementModel.StudnetAttendance">
+              <MappingFragment StoreEntitySet="StudnetAttendance">
+                <ScalarProperty Name="Statusno" ColumnName="Statusno" />
+                <ScalarProperty Name="Rollno" ColumnName="Rollno" />
+                <ScalarProperty Name="StudentName" ColumnName="StudentName" />
+                <ScalarProperty Name="DateOfClass" ColumnName="DateOfClass" />
+                <ScalarProperty Name="AttendanceStatus" ColumnName="AttendanceStatus" />
+                <ScalarProperty Name="Courseid" ColumnName="Courseid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
